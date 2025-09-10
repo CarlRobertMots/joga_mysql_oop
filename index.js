@@ -2,6 +2,7 @@ const express = require('express');
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // <-- Add this line
 
 const articleRouter = require('./routes/articles');
 const authorRouter = require('./routes/authors');
