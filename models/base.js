@@ -12,7 +12,8 @@ class BaseSQLModel {
 
   async findAll() {
     const query = `SELECT * FROM ${this.tableName}`;
-    return await this.executeQuery(query);
+    const results = await this.executeQuery(query);
+    return results;
   }
 
   async findById(id) {
@@ -22,11 +23,16 @@ class BaseSQLModel {
   }
 
   async findOne(where, value) {
-    const query = `SELECT * FROM ${this.tableName} WHERE ${where} = ?`;
-    const results = await this.executeQuery(query, [value]);
-    return results[0];
-  }
+  const query = `SELECT * FROM ${this.tableName} WHERE ${where} = ? LIMIT 1`;
+  const results = await this.executeQuery(query, [value]);
+  return results[0];
+}
 
+async findMany(where, value) {
+  const query = `SELECT * FROM ${this.tableName} WHERE ${where} = ?`;
+  const results = await this.executeQuery(query, [value]);
+  return results;
+}
   async create(data) {
     const query = `INSERT INTO ${this.tableName} SET ?`;
     const result = await this.executeQuery(query, [data]);

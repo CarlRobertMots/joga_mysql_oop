@@ -1,18 +1,14 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json());
 
-const articleControllerClass = require('./controllers/article')
-const articleController = new articleControllerClass()
+const articleRouter = require('./routes/articles');
+const authorRouter = require('./routes/authors');
 
-const articleRoutes = require('./routes/articles')
-app.use('/', articleRoutes)
+app.use('/', articleRouter);
+app.use('/author/', authorRouter);
 
-// Start the app
-app.listen(3025, () => {
-    console.log(`App started at http://localhost:3025`);
+app.listen(3026, () => {
+    console.log('Server running on http://localhost:3026');
 });

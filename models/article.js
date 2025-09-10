@@ -13,6 +13,10 @@ class ArticleModel extends BaseSQLModel {
     const article = await super.findOne('slug', slug);
     return article;
     }
+    async findMany (author) {
+    const result = await super.findMany('author_id', author.id);
+    return result;
+    }
 }
 
 module.exports = ArticleModel;
