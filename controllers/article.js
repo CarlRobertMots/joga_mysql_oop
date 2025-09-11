@@ -25,5 +25,23 @@ class arcileController {
         const articleId = await articleModel.create(newArticle);
         res.status(201).json({message: 'Article created with id ${articleId}', articleId: {articleId, ...newArticle}});
     }
+       async updateArticle(req, res) {
+   const articleId = parseInt(req.params.id, 10);
+    const updatedArticle = {
+      name: req.body.name,
+      slug: req.body.slug,
+      image: req.body.image,
+      body: req.body.body,
+      author_id: req.body.author_id
+  }
+    const result = await articleModel.update(articleId, updatedArticle);
+    res.status(200).json({ message: 'Article updated', result });
+  }
+
+    async deleteArticle(req, res) {
+        const articleId = parseInt(req.params.id, 10);
+        const result = await articleModel.delete(articleId);
+        res.status(200).json({ message: 'Article deleted', result });
+        }
 }
 module.exports = arcileController;

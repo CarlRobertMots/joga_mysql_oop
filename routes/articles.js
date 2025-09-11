@@ -10,4 +10,8 @@ router.get('/article/:slug', (req, res) => articleController.getArticleBySlug(re
 
 router.post('/article/create', (req, res) => articleController.createNewArticle(req, res));
 
+router.put('/article/edit/:id', (req, res) => articleController.updateArticle(req, res));
+
+router.delete('/article/delete/:id', (req, res) => articleController.deleteArticle(req, res));
+
 module.exports = router;
