@@ -27,12 +27,11 @@ class BaseSQLModel {
   const results = await this.executeQuery(query, [value]);
   return results[0];
 }
-
-async findMany(where, value) {
-  const query = `SELECT * FROM ${this.tableName} WHERE ${where} = ?`;
-  const results = await this.executeQuery(query, [value]);
-  return results;
-}
+  async findMany(where, value) {
+    const query = `SELECT * FROM ${this.tableName} WHERE ${where} = ?`;
+    const results = await this.executeQuery(query, [value]);
+    return results;
+  }
   async create(data) {
     const query = `INSERT INTO ${this.tableName} SET ?`;
     const result = await this.executeQuery(query, [data]);
