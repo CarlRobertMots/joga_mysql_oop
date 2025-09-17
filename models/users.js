@@ -6,9 +6,15 @@ class UserModel extends BaseSQLModel {
     }
 
     async create(user) {
-    const createdUserId = await super.create(user);
+    const createdUserId = await super.create({
+      username: user.username,
+      email: user.email,
+      password: user.password,
+      role: user.role || 'user' // default role is 'user'
+    });
     return createdUserId;
-    }
+  }
+
     async findById(id) {
     const user = await super.findById(id);
     return user;

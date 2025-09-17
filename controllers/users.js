@@ -4,8 +4,10 @@ const userModel = new UserDbModel();
 
 class userController {
   async register(req, res) {
-    try {const { username, password } = req.body;
+    try {
+    const { username, password, email, role } = req.body;
 
+    const newRole = (req.session.user?.role === 'admin' && role === 'admin') ? 'admin' : 'user';
     // username olemas
     if (!username || username.trim().length === 0) {
       return res.status(400).json({ message: 'Kasutajanimi on nõutud' });
@@ -43,8 +45,9 @@ class userController {
     const cryptedPassword = await bcrypt.hash(password, 10);
     const registeredId = await userModel.create({
       username: username.trim(),
-      email: req.body.email,
-      password: cryptedPassword
+      email: email.trim(),
+      password: cryptedPassword,
+      role: newRole
     });
 
     if (registeredId) {
@@ -82,20 +85,22 @@ class userController {
         return res.status(400).json({ message: 'Vale kasutajanimi või parool' });
         }
         //lisa sessiooni
-        req.session.user = {
-        username: user.username,
-        user_id: user.id
-        };
-        res.status(200).json({ message: 'Sisselogimine õnnestus', user: { user_id: user.id, username: user.username } });
+   req.session.user = {
+    username: user.username,
+    user_id: user.id,
+    role: user.role
+  };
 
-        return res.json({
-      message: 'Sisse logimine õnnestus',
-      user: {
-        user_id: user.id,
-        username: user.username,
-        email: user.email
-      }
-    });
+  
+  return res.status(200).json({
+    message: 'Sisselogimine õnnestus',
+    user: {
+      user_id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role
+    }
+  });
     }
 }
 
