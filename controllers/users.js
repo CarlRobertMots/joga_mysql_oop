@@ -4,7 +4,7 @@ const userModel = new UserDbModel();
 
 class userController {
   async register(req, res) {
-    const { username, password } = req.body;
+    try {const { username, password } = req.body;
 
     // username olemas
     if (!username || username.trim().length === 0) {
@@ -60,7 +60,45 @@ class userController {
     }
 
     res.status(500).json({ message: 'Registreerimine ebaõnnestus' });
-  }
+    } catch (error) {
+    console.error('Register error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+    }
+    }
+    async login(req, res) {
+      const { username, password } = req.body;
+      
+      if (!username || !password) {
+        return res.status(400).json({ message: 'Kasutajanimi ja parool on nõutud' });
+      }
+      //leia kasutaja
+        const user = await userModel.findByUsername(username.trim());
+        if (!user) {
+        return res.status(400).json({ message: 'Vale kasutajanimi või parool' });
+        }
+        //võrdle paroole
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+        return res.status(400).json({ message: 'Vale kasutajanimi või parool' });
+        }
+        //lisa sessiooni
+        req.session.user = {
+        username: user.username,
+        user_id: user.id
+        };
+        res.status(200).json({ message: 'Sisselogimine õnnestus', user: { user_id: user.id, username: user.username } });
+
+        return res.json({
+      message: 'Sisse logimine õnnestus',
+      user: {
+        user_id: user.id,
+        username: user.username,
+        email: user.email
+      }
+    });
+    }
 }
+
+
 
 module.exports = new userController();
